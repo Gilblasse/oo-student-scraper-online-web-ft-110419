@@ -19,7 +19,7 @@ class Scraper
   def self.parse_social_links(doc)
     keys = [:twitter, :linkedin, :github]
     socials = doc.css("a").map{|a|a['href'].match(/(?!\W|w)\w*(?=.c)/).to_s}.zip(doc.css("a").map{|a|a['href']}).to_h
-    socials.map {|k,v| keys.include?(k.to_sym) ? [k,v] : [k="blog",v]}.to_h
+    socials.map {|k,v| keys.include?(k.to_sym) ? [k.to_sym,v] : [k="blog".to_sym,v]}.to_h
   end
 
 end
