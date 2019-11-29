@@ -12,11 +12,11 @@ class Scraper
 
   def self.scrape_profile_page(profile_url)
     doc = Nokogiri::HTML(open(profile_url))
-    socials = self.parse_social_links(doc.css(".social-icon-container"))
+    socials = self.find_social_links(doc.css(".social-icon-container"))
     socials.merge!({bio: doc.css(".description-holder p").text,profile_quote: doc.css(".profile-quote").text})
-  end
+  end 
   
-  def self.parse_social_links(doc)
+  def self.find_social_links(doc)
     keys = [:twitter, :linkedin, :github]
     socials = doc.css("a").map{|a|a['href'].match(/(?!\W|w)\w*(?=.c)/).to_s}.zip(doc.css("a").map{|a|a['href']}).to_h
     socials.map {|k,v| keys.include?(k.to_sym) ? [k.to_sym,v] : [k="blog".to_sym,v]}.to_h
