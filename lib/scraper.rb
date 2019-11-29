@@ -12,15 +12,13 @@ class Scraper
 
   def self.scrape_profile_page(profile_url)
     doc = Nokogiri::HTML(open(profile_url))
-    socials = parse_social_links(doc)
-    {}
-    binding.pry
+    socials = self.parse_social_links(doc.css(".social-icon-container"))
+    
   end
   
-  def parse_social_links(doc)
+  def self.parse_social_links(doc)
     keys = [:twitter, :linkedin, :github]
-    links = doc.css(".social-icon-container")
-    socials = links.css("a").map{|a|a['href'].match(/(?!\W|w)\w*(?=.c)/).to_s}.zip(links.css("a").map{|a|a['href']}).to_h
+    socials = doc.css("a").map{|a|a['href'].match(/(?!\W|w)\w*(?=.c)/).to_s}.zip(doc.css("a").map{|a|a['href']}).to_h
     socials.map {|k,v| keys.include?(k.to_sym) ? [k,v] : [k="blog",v]}.to_h
   end
 
